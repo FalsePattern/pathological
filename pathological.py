@@ -140,11 +140,12 @@ def load_image(name, colorkey=-1, size=None):
 		raise SystemExit(message)
 
 	if size is not None:
-		image = pygame.transform.scale( image, size)
+#		print (fullname, size)
+		image = pygame.transform.scale( image, (int(size[0]),int(size[1])))
 	image = image.convert()
 
 	if colorkey is not None:
-		if colorkey is -1:
+		if colorkey == -1:
 			colorkey = image.get_at((0,0))
 		image.set_colorkey(colorkey, RLEACCEL)
 	return image
@@ -377,7 +378,7 @@ def load_images():
 	Board.launcher_v = load_image('launcher-v.png', None,
 		(marble_size, vert_tiles * tile_size + marble_size))
 	Board.launcher_corner = load_image('launcher-corner.png', (255,0,0),
-		((tile_size-marble_size)/2+marble_size,marble_size))
+		((tile_size-marble_size)//2+marble_size,marble_size))
 	Board.launcher_entrance = load_image('entrance.png', -1,
 		(tile_size,marble_size))
 
@@ -979,7 +980,7 @@ class Board:
 			launch_timer_pos[1] + timer_height - timer_margin
 
 		# Fill up the launch queue
-		for i in range( vert_tiles * tile_size / marble_size + 2):
+		for i in range( vert_tiles * tile_size // marble_size + 2):
 			self.launch_queue.append(random.choice(self.colors))
 
 		# Create The Background
@@ -1246,11 +1247,11 @@ class Board:
 			effective_cx = cx
 			effective_cy = cy + marble_size
 		else:
-			effective_cx = cx + marble_size/2 * dirs[marble.direction][0]
-			effective_cy = cy + marble_size/2 * dirs[marble.direction][1]
+			effective_cx = cx + marble_size//2 * dirs[marble.direction][0]
+			effective_cy = cy + marble_size//2 * dirs[marble.direction][1]
 
-		tile_x = effective_cx / tile_size
-		tile_y = effective_cy / tile_size
+		tile_x = effective_cx // tile_size
+		tile_y = effective_cy // tile_size
 		tile_xr = cx - tile_x * tile_size
 		tile_yr = cy - tile_y * tile_size
 
@@ -1274,8 +1275,8 @@ class Board:
 
 	def click(self, pos):
 		# Determine which tile the pointer is in
-		tile_x = (pos[0] - self.pos[0]) / tile_size
-		tile_y = (pos[1] - self.pos[1]) / tile_size
+		tile_x = (pos[0] - self.pos[0]) // tile_size
+		tile_y = (pos[1] - self.pos[1]) // tile_size
 		tile_xr = pos[0] - self.pos[0] - tile_x * tile_size
 		tile_yr = pos[1] - self.pos[1] - tile_y * tile_size
 		if tile_x >= 0 and tile_x < horiz_tiles and \
@@ -1434,10 +1435,10 @@ class Board:
 
 			# Handle Input Events
 			for event in pygame.event.get():
-				if event.type is QUIT:
+				if event.type == QUIT:
 					return -4
-				elif event.type is KEYDOWN:
-					if event.key is K_ESCAPE: return -3
+				elif event.type == KEYDOWN:
+					if event.key == K_ESCAPE: return -3
 					elif event.key == ord('n'): return 2
 					elif event.key == ord('b'): return 3
 					elif event.key == ord(' ') or \
@@ -1458,7 +1459,7 @@ class Board:
 					elif event.key == K_F4:
 						toggle_sound()
 
-				elif event.type is MOUSEBUTTONDOWN:
+				elif event.type == MOUSEBUTTONDOWN:
 					if self.paused:
 						self.paused = 0
 						popdown( pause_popup)
@@ -1743,9 +1744,9 @@ class Game:
 		while 1:
 			pygame.time.wait(20)
 			for event in pygame.event.get():
-				if event.type is QUIT:
+				if event.type == QUIT:
 					return -2
-				elif event.type is KEYDOWN:
+				elif event.type == KEYDOWN:
 					if event.key == K_ESCAPE: return -1
 					if event.key == ord('b'):
 						if self.level > 0: self.level -= 1
@@ -1774,7 +1775,7 @@ class Game:
 						event.key == K_RCTRL:
 						continue
 					return 1
-				elif event.type is MOUSEBUTTONDOWN:
+				elif event.type == MOUSEBUTTONDOWN:
 					return 1
 
 def translate_key( key, shift_state):
@@ -1829,14 +1830,14 @@ def get_name( screen, font, cursor_box, backcol, forecol):
 
 		pygame.time.wait(20)
 		for event in pygame.event.get():
-			if event.type is QUIT:
+			if event.type == QUIT:
 				return None
-			elif event.type is KEYUP:
+			elif event.type == KEYUP:
 				if event.key == K_LSHIFT:
 					shift_state &= ~KMOD_LSHIFT
 				elif event.key == K_RSHIFT:
 					shift_state &= ~KMOD_RSHIFT
-			elif event.type is KEYDOWN:
+			elif event.type == KEYDOWN:
 				if event.key == K_LSHIFT:
 					shift_state |= KMOD_LSHIFT
 				elif event.key == K_RSHIFT:
@@ -2062,12 +2063,12 @@ class IntroScreen:
 
 			pygame.time.wait(20)
 			for event in pygame.event.get():
-				if event.type is QUIT:
+				if event.type == QUIT:
 					if self.curpage == 1:
 						self.go_to_main_menu()
 						continue
 					return -2
-				elif event.type is KEYDOWN:
+				elif event.type == KEYDOWN:
 					if event.key == K_F2:
 						play_sound( menu_select)
 						if not toggle_fullscreen(): return -3
@@ -2077,7 +2078,7 @@ class IntroScreen:
 						toggle_music()
 						self.draw_menu()
 					elif event.key == K_F4:
-						toggle_sound(1, self.dirty_rects)
+						toggle_sound()
 						play_sound( menu_select)
 						self.draw_menu()
 					elif self.curpage == 1:
@@ -2108,7 +2109,7 @@ class IntroScreen:
 							self.inc_level()
 							self.draw_menu()
 					continue
-				elif event.type is MOUSEBUTTONDOWN:
+				elif event.type == MOUSEBUTTONDOWN:
 					if self.curpage == 1:
 						self.go_to_main_menu()
 						continue
@@ -2120,7 +2121,7 @@ class IntroScreen:
 					if pos[0] < self.menu_pos[0]: continue
 					if pos[0] >= self.menu_pos[0] + self.menu_width: continue
 					if pos[1] < self.menu_pos[1]: continue
-					i = (pos[1] - self.menu_pos[1]) / self.menu_font_height
+					i = (pos[1] - self.menu_pos[1]) // self.menu_font_height
 					if i >= len(self.menu): continue
 					rc = self.menu_select( i)
 					if rc: return rc
@@ -2259,6 +2260,7 @@ def setup_everything():
 		pygame.mixer.pre_init(44100,-16,1,4096)
 
 	# Initialize the game module
+	pygame.init()
 	pygame.display.init()
 	try:
 		pygame.mixer.init()
