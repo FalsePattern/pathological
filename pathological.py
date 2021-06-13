@@ -69,9 +69,10 @@ extra_life_frequency = 5000 # Extra life awarded every this many points
 max_spare_lives = 10
 
 # Volume levels
-intro_music_volume = 0.6
-ingame_music_volume = 0.9
-sound_effects_volume = 0.6
+music_volume = 0.5
+intro_music_volume = 0.5
+ingame_music_volume = 0.5
+sound_effects_volume = 0.5
 
 # Changing these may affect the playability of levels
 default_colors = (2,3,4,6)  # Blue, Green, Yellow, Red
@@ -170,7 +171,7 @@ def play_sound(sound):
 	if sound_on: sound.play()
 
 def start_music(name, volume=-1):
-	global music_pending_song, music_loaded, music_volume
+	global music_pending_song, music_loaded
 
 	music_volume = volume
 
@@ -1428,6 +1429,7 @@ class Board:
 	#  2: User requested a skip to the next level
 	#  3: User requested a skip to the previous level
 	def play_level( self):
+
 		# Perform the first render
 		self.update()
 
@@ -1653,6 +1655,7 @@ class Game:
 	#  1: Game completed normally
 	#  2: User achieved a highscore
 	def play(self):
+
 		# Draw the loading screen
 		backdrop = load_image('backdrop.jpg', None,
 			(screen_width, screen_height))
@@ -2060,6 +2063,9 @@ class IntroScreen:
 		else: IntroScreen.start_levelset = 0
 
 	def do(self, show_highscores=0):
+
+		global music_volume
+
 		self.scroller_pos = -self.scroller_rect[2]
 
 		if( show_highscores):
@@ -2130,6 +2136,16 @@ class IntroScreen:
 						if self.menu_cursor == 0:
 							self.inc_level()
 							self.draw_menu()
+					elif event.unicode == "+" or event.key == K_PLUS or event.key == K_KP_PLUS:
+						if music_volume < 1.0: 
+							music_volume +=0.1
+							pygame.mixer.music.set_volume(music_volume)
+					elif event.unicode == "-" or event.key == K_MINUS or event.key == K_KP_MINUS:
+						if music_volume > 0.0: 
+							music_volume -=0.1
+							pygame.mixer.music.set_volume(music_volume)
+					else:
+						pass
 					continue
 				elif event.type == MOUSEBUTTONDOWN:
 #					print("Mouse Button Menu Event", event)

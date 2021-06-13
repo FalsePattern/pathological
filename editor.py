@@ -64,9 +64,9 @@ timer_margin = 4
 info_height = 20
 
 # Volume levels
-intro_music_volume = 0.3
+intro_music_volume = 0.1
 ingame_music_volume = 0.1
-sound_effects_volume = 0.6
+sound_effects_volume = 0.5
 
 # Changing these may affect the playability of levels
 default_colors = (2,3,4,6)  # Blue, Green, Yellow, Red
@@ -1387,11 +1387,11 @@ class Board:
 						toggle_music()
 					elif event.key == K_F4:
 						toggle_sound()
-					elif event.key == K_PLUS or event.key == 270:
+					elif event.unicode == "+" or event.key == K_PLUS or event.key == K_KP_PLUS:
 						if music_volume < 1: 
 							music_volume +=0.1
 							pygame.mixer.music.set_volume(music_volume)
-					elif event.key == K_MINUS or event.key == 269:
+					elif event.unicode == "-" or event.key == K_MINUS or event.key == K_KP_MINUS:
 						if music_volume > 0: 
 							music_volume -=0.1
 							pygame.mixer.music.set_volume(music_volume)

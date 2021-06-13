@@ -3,8 +3,9 @@
   any rotation of the mouse wheel is detected and turns the wheel
   one direction.  I'd like to figure out how to rotate the wheels
   in either direction based upon the direction of the mouse 
-  wheel, but that isn't working yet.  Some other bugs still 
-  remain for me to figure out.
+  wheel, but that isn't working yet so for now the rotation only
+  goes in the direction where it looks right.  Other bugs are 
+  still getting fixed as I find them and figure them out.
 
 # MY WISHLIST
 - A python3 version already is available in Debian so this is 
@@ -16,6 +17,7 @@
 - Adds ability to play different levelsets to original game
 - Adds a level editor to original game
 - Adds hotkeys to increase/decrease music volume: '+' and '-'
+  for either number pad or keyboard.
 
 # TODO
 - Ability to remove a level graphically
@@ -28,14 +30,9 @@
 # TOFIX
 - Unlock done level even if no highscore has been recorded
 - Key translations for all keyboard layouts
-- Pygame 1.9.6 works fine for fullscreen and back, but Pygame 
-  2.0.1 (SDL 2.0.14, Python 3.9.2) may lock up your screen or
-  computer if you try to go to fullscreen and back again.  Use
-  at least Pygame 2.0.2.dev1 (SDL 2.0.14, Python 3.9.2) instead
-  as it may work better and not lock up the screen or computer, 
-  but it does not work completely. I still use it because I 
-  need a version with mouse wheel support so this version or  
-  later is what I'm working with.
+- Fullscreen start up is not always working for pygame 2.0+, but
+  for now if you start with the screen at normal size and then
+  change to fullscreen it works.
 
 * ----------------------------------------------------------------- *
 
@@ -59,14 +56,14 @@ To remove a set, remove the set file in the user_circuits folder.
 
 ReadMe updated by Nina Ripoll
 On Feb. 6th, 2016
-Amended for Python 3 by flowerbug
+Amended by flowerbug 2021
 
 * ----------------------------------------------------------------- *
 
 Copyright (C) 2003  John-Paul Gignac (Game)
           (C) 2004  Joe Wreschnig (Game)
           (C) 2016 Nina Ripoll (Editor)
-          (C) 2021 flowerbug
+          (C) 2021 flowerbug (Bug fixes, Mouse wheel changes)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
