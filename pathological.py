@@ -141,7 +141,6 @@ def load_image(name, colorkey=-1, size=None):
 		raise SystemExit(message)
 
 	if size is not None:
-#		print (fullname, size)
 		image = pygame.transform.scale( image, (int(size[0]),int(size[1])))
 	image = image.convert()
 
@@ -451,7 +450,6 @@ class Tile:
 	def draw_fore(self, surface): return 0
 
 	def click(self, board, posx, posy, tile_x, tile_y, dir): 
-#		print("Click Tile pos", tile_x, tile_y, dir)
 		pass
 
 	def affect_marble(self, board, marble, rpos):
@@ -470,6 +468,7 @@ class Wheel(Tile):
 	def __init__(self, paths, center=None):
 		Tile.__init__(self, paths, center) # Call base class intializer
 		self.spinpos = 0
+		self.spindir = 0
 		self.completed = 0
 		self.marbles = [ -3, -3, -3, -3 ]
 
@@ -480,21 +479,42 @@ class Wheel(Tile):
 
 		if self.spinpos:
 			surface.blit( self.blank_images[self.completed], self.rect.topleft)
-			for i in range(4):
-				holecenter = holecenters[self.spinpos][i]
-				surface.blit( self.moving_holes[self.completed],
-					(holecenter[0]-marble_size//2+self.rect.left,
-					holecenter[1]-marble_size//2+self.rect.top))
+			if self.spindir == 1:
+				for i in range(4):
+					holecenter = holecenters[self.spinpos][i]
+					surface.blit( self.moving_holes[self.completed],
+						(holecenter[0]-marble_size//2+self.rect.left,
+						holecenter[1]-marble_size//2+self.rect.top))
+			elif self.spindir == -1:
+				for i in range(3,-1,-1):
+					holecenter = holecenters[self.spinpos][i]
+					surface.blit( self.moving_holes[self.completed],
+						(holecenter[1]-marble_size//2+self.rect.left,
+						holecenter[0]-marble_size//2+self.rect.top))
+			else:
+				self.spindir = 0
+				pass
+
 		else:
 			surface.blit( self.images[self.completed], self.rect.topleft)
+			self.spindir = 0
 
-		for i in range(4):
-			color = self.marbles[i]
-			if color >= 0:
-				holecenter = holecenters[self.spinpos][i]
-				surface.blit( Marble.images[color],
-					(holecenter[0]-marble_size//2+self.rect.left,
-					holecenter[1]-marble_size//2+self.rect.top))
+		if self.spindir == -1:
+			for i in range(3,-1,-1):
+				color = self.marbles[i]
+				if color >= 0:
+					holecenter = holecenters[self.spinpos][i]
+					surface.blit( Marble.images[color],
+						(holecenter[1]-marble_size//2+self.rect.left,
+						holecenter[0]-marble_size//2+self.rect.top))
+		else:
+			for i in range(4):
+				color = self.marbles[i]
+				if color >= 0:
+					holecenter = holecenters[self.spinpos][i]
+					surface.blit( Marble.images[color],
+						(holecenter[0]-marble_size//2+self.rect.left,
+						holecenter[1]-marble_size//2+self.rect.top))
 
 		return 1
 
@@ -515,23 +535,22 @@ class Wheel(Tile):
 
 			# Start the wheel spinning
 			self.spinpos = wheel_steps - 1
+			self.spindir = dir
 			play_sound( wheel_turn)
 
 			# Reposition the marbles
-			if dir == None or dir == 1 or dir == -1:
-#				print("Wheel Click:", tile_x, tile_y, dir)
+			if dir == None or dir == 1:
 				t = self.marbles[0]
 				self.marbles[0] = self.marbles[1]
 				self.marbles[1] = self.marbles[2]
 				self.marbles[2] = self.marbles[3]
 				self.marbles[3] = t
-#			else:
-#				print("Wheel Click dir else", tile_x, tile_y, dir)
-#				t = self.marbles[3]
-#				self.marbles[3] = self.marbles[2]
-#				self.marbles[2] = self.marbles[1]
-#				self.marbles[1] = self.marbles[0]
-#				self.marbles[0] = t
+			else:
+				t = self.marbles[3]
+				self.marbles[3] = self.marbles[2]
+				self.marbles[2] = self.marbles[1]
+				self.marbles[1] = self.marbles[0]
+				self.marbles[0] = t
 
 			self.drawn = 0
 
@@ -1475,14 +1494,12 @@ class Board:
 
 				elif event.type == MOUSEBUTTONDOWN:
 					if event.button == 4 or event.button == 5:
-#						print("Play Level MB Scrolling up or down.", event.button)
 						pass
 					elif self.paused and not (event.button == 4 or event.button == 5):
 						self.paused = 0
 						popdown( pause_popup)
 					else: self.click( pygame.mouse.get_pos(), None)
 				elif event.type == MOUSEWHEEL:
-#					print("Play Level MW Scrolling up or down.", event.y)
 					self.click( pygame.mouse.get_pos(), event.y)
 
 			if not self.paused: self.update()
@@ -2148,9 +2165,7 @@ class IntroScreen:
 						pass
 					continue
 				elif event.type == MOUSEBUTTONDOWN:
-#					print("Mouse Button Menu Event", event)
 					if event.button == 4 or event.button == 5:
-#						print("  Scrolling up or down.", event.button)
 						continue
 					if self.curpage == 1:
 						self.go_to_main_menu()
@@ -2168,16 +2183,13 @@ class IntroScreen:
 					rc = self.menu_select( i)
 					if rc: return rc
 				elif event.type == MOUSEWHEEL:
-#					print("Mouse Wheel Menu Event", event)
 					if event.y == -1:
-#						print("  Scrolling down.")
 						self.menu_cursor += 1
 						play_sound( menu_scroll)
 						if self.menu_cursor == len(self.menu):
 							self.menu_cursor = 0
 						self.draw_menu()
 					elif event.y == 1:
-#						print("  Scrolling up.")
 						self.menu_cursor -= 1
 						play_sound( menu_scroll)
 						if self.menu_cursor < 0:    

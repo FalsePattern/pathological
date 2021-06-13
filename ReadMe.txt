@@ -1,11 +1,5 @@
 # IN PROGRESS
-- Mouse wheel support - When moving over a wheel on the screen
-  any rotation of the mouse wheel is detected and turns the wheel
-  one direction.  I'd like to figure out how to rotate the wheels
-  in either direction based upon the direction of the mouse 
-  wheel, but that isn't working yet so for now the rotation only
-  goes in the direction where it looks right.  Other bugs are 
-  still getting fixed as I find them and figure them out.
+  Bugs are still getting fixed as I find them.
 
 # MY WISHLIST
 - A python3 version already is available in Debian so this is 
@@ -18,6 +12,10 @@
 - Adds a level editor to original game
 - Adds hotkeys to increase/decrease music volume: '+' and '-'
   for either number pad or keyboard.
+- Mouse wheel support - When moving over a wheel on the screen
+  any rotation of the mouse wheel is detected and turns the wheel
+  in either direction based upon the direction of the mouse 
+  wheel.
 
 # TODO
 - Ability to remove a level graphically
