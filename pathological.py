@@ -485,16 +485,12 @@ class Wheel(Tile):
 					surface.blit( self.moving_holes[self.completed],
 						(holecenter[0]-marble_size//2+self.rect.left,
 						holecenter[1]-marble_size//2+self.rect.top))
-			elif self.spindir == -1:
+			else:
 				for i in range(3,-1,-1):
 					holecenter = holecenters[self.spinpos][i]
 					surface.blit( self.moving_holes[self.completed],
 						(holecenter[1]-marble_size//2+self.rect.left,
 						holecenter[0]-marble_size//2+self.rect.top))
-			else:
-				self.spindir = 0
-				pass
-
 		else:
 			surface.blit( self.images[self.completed], self.rect.topleft)
 			self.spindir = 0
