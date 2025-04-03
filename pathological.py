@@ -479,15 +479,15 @@ class Wheel(Tile):
 
         if self.spinpos:
             surface.blit( self.blank_images[self.completed], self.rect.topleft)
-            if self.spindir == 1:
+            if self.spindir == 1 or self.spindir == 0:
                 for i in range(4):
                     holecenter = holecenters[self.spinpos][i]
                     surface.blit( self.moving_holes[self.completed],
                         (holecenter[0]-marble_size//2+self.rect.left,
                         holecenter[1]-marble_size//2+self.rect.top))
             else:
-                for i in range(3,-1,-1):
-                    holecenter = holecenters[self.spinpos][i]
+                for i in range(4):
+                    holecenter = holecenters[self.spinpos][3-i]
                     surface.blit( self.moving_holes[self.completed],
                         (holecenter[1]-marble_size//2+self.rect.left,
                         holecenter[0]-marble_size//2+self.rect.top))
@@ -495,15 +495,7 @@ class Wheel(Tile):
             surface.blit( self.images[self.completed], self.rect.topleft)
             self.spindir = 0
 
-        if self.spindir == -1:
-            for i in range(3,-1,-1):
-                color = self.marbles[i]
-                if color >= 0:
-                    holecenter = holecenters[self.spinpos][i]
-                    surface.blit( Marble.images[color],
-                        (holecenter[1]-marble_size//2+self.rect.left,
-                        holecenter[0]-marble_size//2+self.rect.top))
-        else:
+        if self.spindir == 1 or self.spindir == 0:
             for i in range(4):
                 color = self.marbles[i]
                 if color >= 0:
@@ -511,6 +503,14 @@ class Wheel(Tile):
                     surface.blit( Marble.images[color],
                         (holecenter[0]-marble_size//2+self.rect.left,
                         holecenter[1]-marble_size//2+self.rect.top))
+        else:
+            for i in range(4):
+                color = self.marbles[3-i]
+                if color >= 0:
+                    holecenter = holecenters[self.spinpos][i]
+                    surface.blit( Marble.images[color],
+                        (holecenter[1]-marble_size//2+self.rect.left,
+                        holecenter[0]-marble_size//2+self.rect.top))
 
         return 1
 
@@ -525,6 +525,8 @@ class Wheel(Tile):
 
         b1, b2, b3 = pygame.mouse.get_pressed()
         if b3 or dir != None:
+            if dir == None:
+                dir = 0
             # First, make sure that no marbles are currently entering
             for i in self.marbles:
                 if i == -1 or i == -2: return
@@ -535,7 +537,7 @@ class Wheel(Tile):
             play_sound( wheel_turn)
 
             # Reposition the marbles
-            if dir == None or dir == 1:
+            if dir == 0 or dir == 1:
                 t = self.marbles[0]
                 self.marbles[0] = self.marbles[1]
                 self.marbles[1] = self.marbles[2]
