@@ -1923,7 +1923,7 @@ class IntroScreen:
     scroller_font_height = 28
     scroller_rect = (10,550,780,scroller_font_height)
     scroller_text = \
-        "   Copyright \A9 2003  John-Paul Gignac.   "+ \
+        "   Copyright (C) 2003  John-Paul Gignac.   "+ \
         "   Soundtrack by Matthias Le Bidan.   "+ \
         "   Board designs contributed by Mike Brenneman and Kim Gignac.   "+ \
         "   Editor by Nina Ripoll (c) 2016 / www.maze-photo.com.   "+ \
